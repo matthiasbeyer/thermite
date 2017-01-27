@@ -119,7 +119,10 @@ module Thermite
         if cargo
           target = ENV.fetch('CARGO_TARGET', 'release')
           run_cargo_rustc(target)
-          FileUtils.cp(config.rust_path('target', target, config.shared_library),
+
+          target_path = config.is_in_workspace? ? "../target" : "target"
+
+          FileUtils.cp(config.rust_path(target_path, target, config.shared_library),
                        config.ruby_path('lib'))
         elsif !download_binary_from_custom_uri && !download_binary_from_github_release
           inform_user_about_cargo

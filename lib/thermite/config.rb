@@ -142,6 +142,17 @@ module Thermite
       File.join(ruby_toplevel_dir, *path_components)
     end
 
+    #
+    # Check whether the current directory/crate is in a workspace
+    # This is a silly check that only checks one directory above the
+    # `ruby_toplevel_dir`
+    #
+    def is_in_workspace?
+      pth = (self.ruby_toplevel_dir + "../Cargo.toml")
+      mem = Tomlrb.load_file(pth, symbolize_keys: true)[:workspace][:members]
+      mem.include? self.ruby_toplevel_dir.split("/").last
+    end
+
     # :nocov:
 
     #
